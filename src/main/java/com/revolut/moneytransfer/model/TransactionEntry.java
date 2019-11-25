@@ -75,8 +75,7 @@ public class TransactionEntry {
         this.type = type;
     }
 
-    public static TransactionEntry getTransferTransactionEntry(UUID from, UUID to, Long amount,
-                                                               TransactionStatus status, TransactionType type) {
+    public static TransactionEntry getTransferTransactionEntry(UUID from, UUID to, Long amount) {
         return new TransactionEntry(UUID.randomUUID(), from, to, amount, TransactionStatus.NEW, TransactionType.TRANSFER);
     }
 

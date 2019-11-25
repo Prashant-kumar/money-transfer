@@ -1,9 +1,7 @@
 package com.revolut.moneytransfer.repository;
 
-import com.revolut.moneytransfer.model.Account;
-import com.revolut.moneytransfer.model.CreditTransactionRequest;
-import com.revolut.moneytransfer.model.LedgerEntry;
-import com.revolut.moneytransfer.model.TransactionEntry;
+import com.revolut.moneytransfer.exceptions.InsufficientBalanceException;
+import com.revolut.moneytransfer.model.*;
 import com.revolut.moneytransfer.persistence.jooq.Tables;
 import com.revolut.moneytransfer.persistence.jooq.tables.records.AccountRecord;
 import org.jooq.DSLContext;
@@ -16,6 +14,31 @@ public class TransactionRepository {
 
     public TransactionRepository(final DSLContext jooq) {
         this.jooq = jooq;
+    }
+
+    public void transferMoney(MoneyTransferRequest moneyTransferRequest, UUID fromUuid) {
+        TransactionEntry transactionEntry = TransactionEntry.getTransferTransactionEntry(
+                fromUuid, moneyTransferRequest.getTo(), moneyTransferRequest.getAmount());
+        LedgerEntry creditLedgerEntry = LedgerEntry.getCreditLedgerEntry(fromUuid, moneyTransferRequest.getTo(),
+                moneyTransferRequest.getAmount(), transactionEntry.getUuid());
+
+        LedgerEntry debitLedgerEntry = LedgerEntry.getDebitLedgerEntry(fromUuid, moneyTransferRequest.getTo(),
+                moneyTransferRequest.getAmount(), transactionEntry.getUuid());
+        jooq.transaction(c -> {
+            DSLContext dslContext = DSL.using(c);
+            AccountRecord fromAccountRecord = AccountRepository.lockAccount(dslContext, fromUuid);
+            if(fromAccountRecord.getBalance() < moneyTransferRequest.getAmount()) {
+                throw new InsufficientBalanceException();
+            }
+            AccountRecord toAccountRecord = AccountRepository.lockAccount(dslContext, moneyTransferRequest.getTo());
+            addLedgerEntry(dslContext, creditLedgerEntry);
+            addLedgerEntry(dslContext, debitLedgerEntry);
+            addTransactionEntry(dslContext, transactionEntry);
+            fromAccountRecord.setBalance(fromAccountRecord.getBalance() - moneyTransferRequest.getAmount());
+            fromAccountRecord.store();
+            toAccountRecord.setBalance(toAccountRecord.getBalance() + moneyTransferRequest.getAmount());
+            toAccountRecord.store();
+        });
     }
 
     public void addCreditToAccount(CreditTransactionRequest creditTransactionRequest, UUID toUuid) {

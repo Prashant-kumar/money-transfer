@@ -4,9 +4,11 @@ import spark.utils.StringUtils;
 
 public class Errors {
     public static final String ACCOUNT_NAME_IS_REQUIRED = "Account name is mandatory.";
+    public static final String ACCOUNT_NUMBER_IS_REQUIRED = "Account number is mandatory.";
     public static final String ACCOUNT_NOT_FOUND = "Account not found.";
     public static final String INVALID_UUID = "Invalid UUID.";
     public static final String AMOUNT_IS_NEGATIVE = "Amount must be a postive number greater than 0.";
+    public static final String INSUFFICIENT_BALANCE = "Account balance is less than the amount.";
 
     public static class ErrorResponse {
         private  String message;

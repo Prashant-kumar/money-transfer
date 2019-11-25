@@ -2,10 +2,7 @@ package com.revolut.moneytransfer.config;
 
 import com.revolut.moneytransfer.controller.AccountController;
 import com.revolut.moneytransfer.controller.TransactionController;
-import com.revolut.moneytransfer.exceptions.AccountNotFoundException;
-import com.revolut.moneytransfer.exceptions.AmountIsNegativeException;
-import com.revolut.moneytransfer.exceptions.InvalidUuidException;
-import com.revolut.moneytransfer.exceptions.NameCanNotBeEmtyException;
+import com.revolut.moneytransfer.exceptions.*;
 import com.revolut.moneytransfer.util.JsonHelper;
 import com.revolut.moneytransfer.util.Path;
 
@@ -16,7 +13,7 @@ public class WebConfig {
         put(Path.ACCOUNT, AccountController.createAccount, JsonHelper::convert);
         get(Path.ACCOUNT_DETAIL, AccountController.getAccount, JsonHelper::convert);
         post(Path.ACCOUNT_CREDIT, TransactionController.creditMoney, JsonHelper::convert);
-        post(Path.TRANSFER_MONEY, AccountController.createAccount, JsonHelper::convert);
+        post(Path.TRANSFER_MONEY, TransactionController.transferMoney, JsonHelper::convert);
 
 
         after((request, response) -> {
@@ -31,7 +28,7 @@ public class WebConfig {
             response.header("content-type", "application/json");
         });
 
-        exception(NameCanNotBeEmtyException.class, (e, request, response) -> {
+        exception(NameCanNotBeEmptyException.class, (e, request, response) -> {
             response.status(400);
             response.body(JsonHelper.convert(Errors.ErrorResponse.of(e.getMessage())));
             response.header("content-type", "application/json");
@@ -45,6 +42,12 @@ public class WebConfig {
         });
 
         exception(AmountIsNegativeException.class, (e, request, response) -> {
+            response.status(400);
+            response.body(JsonHelper.convert(Errors.ErrorResponse.of(e.getMessage())));
+            response.header("content-type", "application/json");
+        });
+
+        exception(InsufficientBalanceException.class, (e, request, response) -> {
             response.status(400);
             response.body(JsonHelper.convert(Errors.ErrorResponse.of(e.getMessage())));
             response.header("content-type", "application/json");

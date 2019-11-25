@@ -3,6 +3,7 @@ package com.revolut.moneytransfer.service.impl;
 import com.revolut.moneytransfer.exceptions.AccountNotFoundException;
 import com.revolut.moneytransfer.model.Account;
 import com.revolut.moneytransfer.model.CreditTransactionRequest;
+import com.revolut.moneytransfer.model.MoneyTransferRequest;
 import com.revolut.moneytransfer.repository.AccountRepository;
 import com.revolut.moneytransfer.repository.TransactionRepository;
 import com.revolut.moneytransfer.service.AccountService;
@@ -24,5 +25,11 @@ public class TransactionServiceImpl implements TransactionService {
     public Account credit(CreditTransactionRequest creditTransactionRequest, UUID to) {
         transactionRepository.addCreditToAccount(creditTransactionRequest, to);
         return accountRepository.findByUUID(to).get();
+    }
+
+    @Override
+    public Account transfer(MoneyTransferRequest moneyTransferRequest, UUID from) {
+        transactionRepository.transferMoney(moneyTransferRequest, from);
+        return accountRepository.findByUUID(from).get();
     }
 }

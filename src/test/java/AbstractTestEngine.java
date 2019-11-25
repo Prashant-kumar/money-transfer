@@ -32,11 +32,6 @@ public abstract class AbstractTestEngine {
     public static final String PATH = "";
 
     static {
-//        DataSource dataSource = JdbcConnectionPool.create("jdbc:h2:mem:moneytransfer", "sa", "");
-//        Flyway.configure().dataSource(dataSource).load().migrate();
-//        DSLContext jooq = DSL.using(dataSource, SQLDialect.H2);
-//        accountService = new AccountServiceImpl(new AccountRepository(jooq));
-
         DataSource dataSource = JdbcConnectionPool.create("jdbc:h2:mem:moneytransfer", "sa", "");
         Flyway.configure().dataSource(dataSource).load().migrate();
         DSLContext jooq = DSL.using(dataSource, SQLDialect.H2);

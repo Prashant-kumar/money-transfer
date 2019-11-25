@@ -1,11 +1,13 @@
 package com.revolut.moneytransfer.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.revolut.moneytransfer.exceptions.AccountNumberCanNotBeEmptyException;
 import com.revolut.moneytransfer.exceptions.AmountIsNegativeException;
-import com.revolut.moneytransfer.exceptions.NameCanNotBeEmtyException;
+import com.revolut.moneytransfer.exceptions.NameCanNotBeEmptyException;
 import com.revolut.moneytransfer.model.Account;
 import com.revolut.moneytransfer.model.AccountCreateRequest;
 import com.revolut.moneytransfer.model.CreditTransactionRequest;
+import com.revolut.moneytransfer.model.MoneyTransferRequest;
 import spark.utils.StringUtils;
 
 
@@ -19,7 +21,7 @@ public class RequestValidator {
         AccountCreateRequest request =
                 (AccountCreateRequest)JsonHelper.convert(requestBody, AccountCreateRequest.class);
         if(StringUtils.isBlank(request.getName())) {
-            throw new NameCanNotBeEmtyException();
+            throw new NameCanNotBeEmptyException();
         }
         return Account.ofZeroBalance(UUID.randomUUID(), request.getName());
     }
@@ -32,6 +34,20 @@ public class RequestValidator {
         if(Objects.isNull(request.getAmount()) || request.getAmount() <= 0L) {
             throw new AmountIsNegativeException();
         }
-        return CreditTransactionRequest.of(request.getAmount());
+        return request;
+    }
+
+    public static MoneyTransferRequest getMoneyTransferRequest(String requestBody) throws JsonProcessingException {
+
+        MoneyTransferRequest request =
+                (MoneyTransferRequest)JsonHelper.convert(requestBody, MoneyTransferRequest.class);
+
+        if(Objects.isNull(request.getAmount()) || request.getAmount() <= 0L) {
+            throw new AmountIsNegativeException();
+        }
+        if(Objects.isNull(request.getTo())) {
+            throw new AccountNumberCanNotBeEmptyException();
+        }
+        return request;
     }
 }
