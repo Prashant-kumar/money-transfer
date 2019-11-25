@@ -8,5 +8,213 @@
     <artifactId>money-transfer</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.sparkjava</groupId>
+            <artifactId>spark-core</artifactId>
+            <version>2.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>3.12.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta</artifactId>
+            <version>3.12.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen</artifactId>
+            <version>3.12.3</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.199</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>6.0.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>2.11.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.11.2</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.5.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>4.1.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.assertj/assertj-core -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.14.0</version>
+            <scope>test</scope>
+        </dependency>
+
+
+
+
+    </dependencies>
+
+
+    <profiles>
+        <profile>
+            <id>jooq-generate</id>
+
+            <properties>
+                <db.url>jdbc:h2:~/moneytransfer</db.url>
+                <db.username>sa</db.username>
+            </properties>
+
+            <build>
+                <defaultGoal>generate-sources</defaultGoal>
+
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.flywaydb</groupId>
+                            <artifactId>flyway-maven-plugin</artifactId>
+                            <version>6.0.8</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.jooq</groupId>
+                            <artifactId>jooq-codegen-maven</artifactId>
+                            <version>3.12.3</version>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+
+                <plugins>
+                    <plugin>
+                        <groupId>org.flywaydb</groupId>
+                        <artifactId>flyway-maven-plugin</artifactId>
+                        <configuration>
+                            <url>${db.url}</url>
+                            <user>${db.username}</user>
+                            <locations>
+                                <location>filesystem:/${basedir}/src/main/resources/db/migration</location>
+                            </locations>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>clean-database</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>migrate-database</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>migrate</goal>
+                                    <goal>validate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.jooq</groupId>
+                        <artifactId>jooq-codegen-maven</artifactId>
+                        <configuration>
+                            <jdbc>
+                                <url>${db.url}</url>
+                                <user>${db.username}</user>
+                            </jdbc>
+                            <generator>
+                                <generate>
+                                    <routines>false</routines>
+                                    <pojos>false</pojos>
+                                    <fluentSetters>true</fluentSetters>
+                                    <javaTimeTypes>true</javaTimeTypes>
+                                </generate>
+                                <database>
+                                    <inputSchema>PUBLIC</inputSchema>
+                                    <includes>
+                                        account | transaction | ledger
+                                    </includes>
+                                    <forcedTypes>
+                                        <forcedType>
+                                            <userType>com.revolut.moneytransfer.enums.TransactionStatus</userType>
+                                            <enumConverter>true</enumConverter>
+                                            <expression>.*\.status</expression>
+                                        </forcedType>
+                                    </forcedTypes>
+                                </database>
+                                <target>
+                                    <packageName>com.revolut.moneytransfer.persistence.jooq</packageName>
+                                    <directory>src/main/jooq</directory>
+                                </target>
+                            </generator>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+
 
 </project>
