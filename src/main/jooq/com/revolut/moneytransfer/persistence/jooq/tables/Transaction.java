@@ -5,6 +5,7 @@ package com.revolut.moneytransfer.persistence.jooq.tables;
 
 
 import com.revolut.moneytransfer.enums.TransactionStatus;
+import com.revolut.moneytransfer.enums.TransactionType;
 import com.revolut.moneytransfer.persistence.jooq.Indexes;
 import com.revolut.moneytransfer.persistence.jooq.Keys;
 import com.revolut.moneytransfer.persistence.jooq.Public;
@@ -21,7 +22,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row5;
+import org.jooq.Row6;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -43,7 +44,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Transaction extends TableImpl<TransactionRecord> {
 
-    private static final long serialVersionUID = 555873599;
+    private static final long serialVersionUID = -1636979762;
 
     /**
      * The reference instance of <code>PUBLIC.TRANSACTION</code>
@@ -66,7 +67,7 @@ public class Transaction extends TableImpl<TransactionRecord> {
     /**
      * The column <code>PUBLIC.TRANSACTION.FROM_ACCOUNT_ID</code>.
      */
-    public final TableField<TransactionRecord, UUID> FROM_ACCOUNT_ID = createField(DSL.name("FROM_ACCOUNT_ID"), org.jooq.impl.SQLDataType.UUID.nullable(false), this, "");
+    public final TableField<TransactionRecord, UUID> FROM_ACCOUNT_ID = createField(DSL.name("FROM_ACCOUNT_ID"), org.jooq.impl.SQLDataType.UUID, this, "");
 
     /**
      * The column <code>PUBLIC.TRANSACTION.TO_ACCOUNT_ID</code>.
@@ -82,6 +83,11 @@ public class Transaction extends TableImpl<TransactionRecord> {
      * The column <code>PUBLIC.TRANSACTION.STATUS</code>.
      */
     public final TableField<TransactionRecord, TransactionStatus> STATUS = createField(DSL.name("STATUS"), org.jooq.impl.DefaultDataType.getDefaultDataType("\"PUBLIC\".\"TRANSACTION_STATUS\"").nullable(false), this, "", new org.jooq.impl.EnumConverter<java.lang.Object, com.revolut.moneytransfer.enums.TransactionStatus>(java.lang.Object.class, com.revolut.moneytransfer.enums.TransactionStatus.class));
+
+    /**
+     * The column <code>PUBLIC.TRANSACTION.TYPE</code>.
+     */
+    public final TableField<TransactionRecord, TransactionType> TYPE = createField(DSL.name("TYPE"), org.jooq.impl.DefaultDataType.getDefaultDataType("\"PUBLIC\".\"TRANSACTION_TYPE\"").nullable(false), this, "", new org.jooq.impl.EnumConverter<java.lang.Object, com.revolut.moneytransfer.enums.TransactionType>(java.lang.Object.class, com.revolut.moneytransfer.enums.TransactionType.class));
 
     /**
      * Create a <code>PUBLIC.TRANSACTION</code> table reference
@@ -176,11 +182,11 @@ public class Transaction extends TableImpl<TransactionRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row6 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<UUID, UUID, UUID, Long, TransactionStatus> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row6<UUID, UUID, UUID, Long, TransactionStatus, TransactionType> fieldsRow() {
+        return (Row6) super.fieldsRow();
     }
 }

@@ -1,11 +1,10 @@
 import com.revolut.moneytransfer.config.Errors;
 import com.revolut.moneytransfer.model.Account;
 import com.revolut.moneytransfer.model.AccountCreateRequest;
+import com.revolut.moneytransfer.model.CreditTransactionRequest;
 import com.revolut.moneytransfer.util.Path;
-import org.assertj.core.api.Assertions;
+import org.eclipse.jetty.http.HttpStatus;
 import org.junit.jupiter.api.Test;
-
-import java.util.UUID;
 
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
@@ -18,14 +17,14 @@ public class ApplicationControllerTest extends AbstractTestEngine {
         Account createdAccount = given()
                 .body(new AccountCreateRequest("Jack"))
                 .put(Path.ACCOUNT)
-                .then().body("balance", equalTo(0))
+                .then().statusCode(HttpStatus.CREATED_201)
+                .body("balance", equalTo(0))
                 .body("name", equalTo("Jack")).and()
                 .extract().as(Account.class);
 
         get(Path.ACCOUNT_DETAIL.replace(":uuid", createdAccount.getUuid().toString()))
                 .then().body("balance", equalTo(0))
-                .body("name", equalTo("Jack")).and()
-                .extract().as(Account.class);
+                .body("name", equalTo("Jack"));
 
     }
 
@@ -35,7 +34,7 @@ public class ApplicationControllerTest extends AbstractTestEngine {
         given()
                 .body(new AccountCreateRequest(""))
                 .put(Path.ACCOUNT).then()
-                .statusCode(400)
+                .statusCode(HttpStatus.BAD_REQUEST_400)
                 .body("message", equalTo(Errors.ACCOUNT_NAME_IS_REQUIRED));
     }
 

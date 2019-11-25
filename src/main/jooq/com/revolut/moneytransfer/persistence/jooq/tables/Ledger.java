@@ -20,7 +20,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row3;
+import org.jooq.Row4;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Ledger extends TableImpl<LedgerRecord> {
 
-    private static final long serialVersionUID = 768570727;
+    private static final long serialVersionUID = -319918845;
 
     /**
      * The reference instance of <code>PUBLIC.LEDGER</code>
@@ -71,6 +71,11 @@ public class Ledger extends TableImpl<LedgerRecord> {
      * The column <code>PUBLIC.LEDGER.AMOUNT</code>.
      */
     public final TableField<LedgerRecord, Long> AMOUNT = createField(DSL.name("AMOUNT"), org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
+
+    /**
+     * The column <code>PUBLIC.LEDGER.TRANSACTION_ID</code>.
+     */
+    public final TableField<LedgerRecord, UUID> TRANSACTION_ID = createField(DSL.name("TRANSACTION_ID"), org.jooq.impl.SQLDataType.UUID.nullable(false), this, "");
 
     /**
      * Create a <code>PUBLIC.LEDGER</code> table reference
@@ -161,11 +166,11 @@ public class Ledger extends TableImpl<LedgerRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row3 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<UUID, UUID, Long> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row4<UUID, UUID, Long, UUID> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 }

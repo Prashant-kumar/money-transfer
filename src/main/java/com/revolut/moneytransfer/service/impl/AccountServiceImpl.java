@@ -5,7 +5,6 @@ import com.revolut.moneytransfer.model.Account;
 import com.revolut.moneytransfer.repository.AccountRepository;
 import com.revolut.moneytransfer.service.AccountService;
 
-import java.nio.channels.AcceptPendingException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,10 +19,6 @@ public class AccountServiceImpl implements AccountService {
     public Account get(UUID uuid) {
         Optional<Account> account = accountRepository.findByUUID(uuid);
         return account.orElseThrow(AccountNotFoundException::new);
-    }
-
-    public Account  getAny() {
-        return accountRepository.getAny();
     }
 
     @Override

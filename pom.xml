@@ -193,6 +193,11 @@
                                             <enumConverter>true</enumConverter>
                                             <expression>.*\.status</expression>
                                         </forcedType>
+                                        <forcedType>
+                                            <userType>com.revolut.moneytransfer.enums.TransactionType</userType>
+                                            <enumConverter>true</enumConverter>
+                                            <expression>.*\.type</expression>
+                                        </forcedType>
                                     </forcedTypes>
                                 </database>
                                 <target>
