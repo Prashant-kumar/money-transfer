@@ -18,6 +18,7 @@ public class CreditTransactionRequest {
     public void setAmount(Long amount) {
         this.amount = amount;
     }
+
     public static CreditTransactionRequest of(Long amount) {
         return new CreditTransactionRequest(amount);
     }

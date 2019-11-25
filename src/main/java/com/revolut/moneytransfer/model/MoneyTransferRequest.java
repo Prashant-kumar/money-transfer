@@ -15,6 +15,10 @@ public class MoneyTransferRequest {
         this.amount = amount;
     }
 
+    public static MoneyTransferRequest of(UUID to, Long amount) {
+        return new MoneyTransferRequest(to, amount);
+    }
+
     public UUID getTo() {
         return to;
     }
@@ -29,8 +33,5 @@ public class MoneyTransferRequest {
 
     public void setAmount(Long amount) {
         this.amount = amount;
-    }
-    public static MoneyTransferRequest of(UUID to, Long amount) {
-        return new MoneyTransferRequest(to, amount);
     }
 }

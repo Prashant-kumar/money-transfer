@@ -27,6 +27,14 @@ public class TransactionEntry {
         this.type = type;
     }
 
+    public static TransactionEntry getTransferTransactionEntry(UUID from, UUID to, Long amount) {
+        return new TransactionEntry(UUID.randomUUID(), from, to, amount, TransactionStatus.NEW, TransactionType.TRANSFER);
+    }
+
+    public static TransactionEntry getCreditTransactionEntry(UUID to, Long amount) {
+        return new TransactionEntry(UUID.randomUUID(), null, to, amount, TransactionStatus.NEW, TransactionType.CREDIT);
+    }
+
     public UUID getUuid() {
         return uuid;
     }
@@ -73,13 +81,5 @@ public class TransactionEntry {
 
     public void setType(TransactionType type) {
         this.type = type;
-    }
-
-    public static TransactionEntry getTransferTransactionEntry(UUID from, UUID to, Long amount) {
-        return new TransactionEntry(UUID.randomUUID(), from, to, amount, TransactionStatus.NEW, TransactionType.TRANSFER);
-    }
-
-    public static TransactionEntry getCreditTransactionEntry(UUID to, Long amount) {
-        return new TransactionEntry(UUID.randomUUID(), null, to, amount, TransactionStatus.NEW, TransactionType.CREDIT);
     }
 }

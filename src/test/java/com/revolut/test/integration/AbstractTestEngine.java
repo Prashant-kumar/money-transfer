@@ -1,21 +1,12 @@
+package com.revolut.test.integration;
+
 import com.revolut.moneytransfer.Application;
-import com.revolut.moneytransfer.config.WebConfig;
-import com.revolut.moneytransfer.repository.AccountRepository;
-import com.revolut.moneytransfer.repository.TransactionRepository;
-import com.revolut.moneytransfer.service.impl.AccountServiceImpl;
-import com.revolut.moneytransfer.service.impl.TransactionServiceImpl;
 import io.restassured.RestAssured;
-import org.flywaydb.core.Flyway;
-import org.h2.jdbcx.JdbcConnectionPool;
-import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
-import javax.sql.DataSource;
-
-import static spark.Spark.*;
+import static spark.Spark.awaitStop;
+import static spark.Spark.stop;
 
 public abstract class AbstractTestEngine {
 
@@ -26,9 +17,6 @@ public abstract class AbstractTestEngine {
 
     @BeforeAll
     static void startApplication() {
-        try {
-            stop();
-        }catch (Exception e) {}
         Application.startApplication(PORT);
         RestAssured.baseURI = PROTOCOL + "://" + HOST;
         RestAssured.port = PORT;

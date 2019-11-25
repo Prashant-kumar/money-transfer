@@ -8,7 +8,9 @@ import com.revolut.moneytransfer.service.TransactionService;
 import com.revolut.moneytransfer.service.impl.AccountServiceImpl;
 import com.revolut.moneytransfer.service.impl.TransactionServiceImpl;
 import org.jooq.DSLContext;
+
 import static com.revolut.moneytransfer.Application.jooq;
+
 public class MoneyTransferModule extends AbstractModule {
     @Override
     protected void configure() {

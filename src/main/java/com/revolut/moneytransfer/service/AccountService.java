@@ -7,8 +7,8 @@ import java.util.UUID;
 
 public interface AccountService {
 
-    public Account get(UUID uuid);
+    Account get(UUID uuid);
 
-    public void save(Account account);
+    void save(Account account);
 
 }

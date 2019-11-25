@@ -1,7 +1,8 @@
+package com.revolut.test.integration;
+
 import com.revolut.moneytransfer.config.Errors;
 import com.revolut.moneytransfer.model.Account;
 import com.revolut.moneytransfer.model.AccountCreateRequest;
-import com.revolut.moneytransfer.model.CreditTransactionRequest;
 import com.revolut.moneytransfer.util.Path;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.jupiter.api.Test;

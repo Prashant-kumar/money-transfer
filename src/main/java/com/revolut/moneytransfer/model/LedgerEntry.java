@@ -19,6 +19,14 @@ public class LedgerEntry {
         this.transactionId = transactionId;
     }
 
+    public static LedgerEntry getCreditLedgerEntry(UUID from, UUID to, Long amount, UUID transactionId) {
+        return new LedgerEntry(UUID.randomUUID(), to, amount, transactionId);
+    }
+
+    public static LedgerEntry getDebitLedgerEntry(UUID from, UUID to, Long amount, UUID transactionId) {
+        return new LedgerEntry(UUID.randomUUID(), from, amount * -1, transactionId);
+    }
+
     public UUID getUuid() {
         return uuid;
     }
@@ -49,13 +57,5 @@ public class LedgerEntry {
 
     public void setTransactionId(UUID transactionId) {
         this.transactionId = transactionId;
-    }
-
-    public static LedgerEntry getCreditLedgerEntry(UUID from, UUID to, Long amount, UUID transactionId) {
-        return new LedgerEntry(UUID.randomUUID(), to, amount, transactionId);
-    }
-
-    public static LedgerEntry getDebitLedgerEntry(UUID from, UUID to, Long amount, UUID transactionId) {
-        return new LedgerEntry(UUID.randomUUID(), from, amount * -1, transactionId);
     }
 }

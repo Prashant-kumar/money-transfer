@@ -16,6 +16,9 @@ public class TransactionController {
 
 
     public static Route creditMoney = (Request request, Response response) -> {
+        /* This API is required because account creation API creates an account with zero balance.
+         *  We need to add some money to our account in order to transfer it.
+         * */
         try {
             CreditTransactionRequest creditTransactionRequest = RequestValidator.getCreditTransactionRequest(request.body());
             return transactionService.credit(creditTransactionRequest, UUID.fromString(request.params("uuid").trim()));
