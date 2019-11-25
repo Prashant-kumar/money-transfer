@@ -143,7 +143,7 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>com.revolut.transfer.Launcher</mainClass>
+                                    <mainClass>com.revolut.moneytransfer.Application</mainClass>
                                 </manifest>
                                 <manifestEntries>
                                     <Multi-Release>true</Multi-Release>
