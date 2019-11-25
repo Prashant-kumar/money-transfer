@@ -34,4 +34,11 @@
 ## Pitfalls
 If you can't run mvn clean package command and mvn is failing at the compilation step. Most likely you are facing this because of jooq's generated files. Please run **mvn -Pjooq-generate** to resolve this.
 
-## APIs   
+## APIs
+
+
+| Request | Response |
+| --- | --- |
+| curl -X PUT http://localhost:8080/accounts \\<br>-H 'Accept: */*' \\<br>-H 'Content-Type: application/json' \\<br>-H 'Host: localhost:8080' \\<br>-d '{"name": "Prashant"}' | {<br>  "uuid" : "8757ff87-16f4-4a84-bb16-a1db7650e467", <br>"name" : "Prashant",<br>"balance" : 0<br>} |
+| curl -X POST http://localhost:8080/accounts/8757ff87-16f4-4a84-bb16-a1db7650e467/credit -H 'Accept: */*' -H 'Content-Type: application/json' -H 'Host: localhost:8080' -d '{ "amount": 5000 }' | {"uuid" : "8757ff87-16f4-4a84-bb16-a1db7650e467", "name" : "Prashant", "balance" : 5000}|
+| curl -X POST http://localhost:8080/accounts/8757ff87-16f4-4a84-bb16-a1db7650e467/transfer -H 'Accept: */*' -H 'Content-Type: application/json' -H 'Host: localhost:8080' -d '{"to": "da751052-1cd5-441c-8c85-9e638dc9d3df", "amount": 1000}' | {"uuid" : "8757ff87-16f4-4a84-bb16-a1db7650e467","name" : "Prashant","balance" : 4000} |
