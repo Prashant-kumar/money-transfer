@@ -1,5 +1,6 @@
 package com.revolut.moneytransfer.repository;
 
+import com.google.inject.Inject;
 import com.revolut.moneytransfer.exceptions.AccountNotFoundException;
 import com.revolut.moneytransfer.model.Account;
 import com.revolut.moneytransfer.persistence.jooq.Tables;
@@ -15,6 +16,7 @@ import java.util.UUID;
 public class AccountRepository {
     private final DSLContext jooq;
 
+    @Inject
     public AccountRepository(final DSLContext jooq) {
         this.jooq = jooq;
     }

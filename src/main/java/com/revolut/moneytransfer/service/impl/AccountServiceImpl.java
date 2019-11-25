@@ -1,5 +1,6 @@
 package com.revolut.moneytransfer.service.impl;
 
+import com.google.inject.Inject;
 import com.revolut.moneytransfer.exceptions.AccountNotFoundException;
 import com.revolut.moneytransfer.model.Account;
 import com.revolut.moneytransfer.repository.AccountRepository;
@@ -11,6 +12,7 @@ import java.util.UUID;
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
 
+    @Inject
     public AccountServiceImpl(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }

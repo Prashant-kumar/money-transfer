@@ -1,5 +1,6 @@
 package com.revolut.moneytransfer.service.impl;
 
+import com.google.inject.Inject;
 import com.revolut.moneytransfer.exceptions.AccountNotFoundException;
 import com.revolut.moneytransfer.model.Account;
 import com.revolut.moneytransfer.model.CreditTransactionRequest;
@@ -16,6 +17,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
 
+    @Inject
     public TransactionServiceImpl(AccountRepository accountRepository, TransactionRepository transactionRepository) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;

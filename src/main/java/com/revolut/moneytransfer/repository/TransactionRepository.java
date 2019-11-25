@@ -1,5 +1,6 @@
 package com.revolut.moneytransfer.repository;
 
+import com.google.inject.Inject;
 import com.revolut.moneytransfer.exceptions.InsufficientBalanceException;
 import com.revolut.moneytransfer.model.*;
 import com.revolut.moneytransfer.persistence.jooq.Tables;
@@ -12,6 +13,7 @@ import java.util.UUID;
 public class TransactionRepository {
     private final DSLContext jooq;
 
+    @Inject
     public TransactionRepository(final DSLContext jooq) {
         this.jooq = jooq;
     }
