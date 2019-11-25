@@ -10,6 +10,7 @@ import com.revolut.moneytransfer.model.MoneyTransferRequest;
 import com.revolut.moneytransfer.persistence.jooq.tables.records.LedgerRecord;
 import com.revolut.moneytransfer.persistence.jooq.tables.records.TransactionRecord;
 import com.revolut.moneytransfer.util.Path;
+import com.revolut.test.integration.AbstractTestEngine;
 import org.assertj.core.api.Assertions;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.jupiter.api.Test;

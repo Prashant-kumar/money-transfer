@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.Generated;
+import javax.annotation.processing.Generated;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
@@ -44,7 +44,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Transaction extends TableImpl<TransactionRecord> {
 
-    private static final long serialVersionUID = -1636979762;
+    private static final long serialVersionUID = -349412409;
 
     /**
      * The reference instance of <code>PUBLIC.TRANSACTION</code>

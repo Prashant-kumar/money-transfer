@@ -8,7 +8,7 @@ import com.revolut.moneytransfer.persistence.jooq.tables.Ledger;
 
 import java.util.UUID;
 
-import javax.annotation.Generated;
+import javax.annotation.processing.Generated;
 
 import org.jooq.Field;
 import org.jooq.Record1;
@@ -30,7 +30,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class LedgerRecord extends UpdatableRecordImpl<LedgerRecord> implements Record4<UUID, UUID, Long, UUID> {
 
-    private static final long serialVersionUID = 765422690;
+    private static final long serialVersionUID = -1220019937;
 
     /**
      * Setter for <code>PUBLIC.LEDGER.UUID</code>.

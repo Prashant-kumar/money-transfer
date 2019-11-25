@@ -10,7 +10,7 @@ import com.revolut.moneytransfer.persistence.jooq.tables.Transaction;
 
 import java.util.UUID;
 
-import javax.annotation.Generated;
+import javax.annotation.processing.Generated;
 
 import org.jooq.Field;
 import org.jooq.Record1;
@@ -32,7 +32,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class TransactionRecord extends UpdatableRecordImpl<TransactionRecord> implements Record6<UUID, UUID, UUID, Long, TransactionStatus, TransactionType> {
 
-    private static final long serialVersionUID = 1238902108;
+    private static final long serialVersionUID = -1110530207;
 
     /**
      * Setter for <code>PUBLIC.TRANSACTION.UUID</code>.

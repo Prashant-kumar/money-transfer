@@ -8,7 +8,7 @@ import com.revolut.moneytransfer.persistence.jooq.tables.Account;
 import com.revolut.moneytransfer.persistence.jooq.tables.Ledger;
 import com.revolut.moneytransfer.persistence.jooq.tables.Transaction;
 
-import javax.annotation.Generated;
+import javax.annotation.processing.Generated;
 
 import org.jooq.Index;
 import org.jooq.OrderField;
