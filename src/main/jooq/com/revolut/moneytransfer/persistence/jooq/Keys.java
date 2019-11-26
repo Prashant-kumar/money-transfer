@@ -11,7 +11,7 @@ import com.revolut.moneytransfer.persistence.jooq.tables.records.AccountRecord;
 import com.revolut.moneytransfer.persistence.jooq.tables.records.LedgerRecord;
 import com.revolut.moneytransfer.persistence.jooq.tables.records.TransactionRecord;
 
-import javax.annotation.processing.Generated;
+import javax.annotation.Generated;
 
 import org.jooq.ForeignKey;
 import org.jooq.UniqueKey;

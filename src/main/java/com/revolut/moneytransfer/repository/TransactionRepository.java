@@ -13,6 +13,7 @@ import com.revolut.moneytransfer.persistence.jooq.tables.records.AccountRecord;
 import com.revolut.moneytransfer.persistence.jooq.tables.records.LedgerRecord;
 import com.revolut.moneytransfer.persistence.jooq.tables.records.TransactionRecord;
 import org.jooq.DSLContext;
+import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,13 @@ public class TransactionRepository {
                 .set(Tables.TRANSACTION.AMOUNT, transactionEntry.getAmount())
                 .set(Tables.TRANSACTION.STATUS, transactionEntry.getStatus())
                 .set(Tables.TRANSACTION.TYPE, transactionEntry.getType())
+                .execute();
+    }
+
+    private static void updateTransactionStatus(DSLContext ctx, UUID uuid, TransactionStatus status) {
+        ctx.update(Tables.TRANSACTION)
+                .set(Tables.TRANSACTION.STATUS, status)
+                .where(Tables.TRANSACTION.UUID.eq(uuid))
                 .execute();
     }
 
@@ -86,26 +94,27 @@ public class TransactionRepository {
 
         LedgerEntry debitLedgerEntry = LedgerEntry.getDebitLedgerEntry(fromUuid, moneyTransferRequest.getTo(),
                 moneyTransferRequest.getAmount(), transactionEntry.getUuid());
-        jooq.transaction(c -> {
-            DSLContext dslContext = DSL.using(c);
-            AccountRecord fromAccountRecord = AccountRepository.lockAccount(dslContext, fromUuid);
-            if (fromAccountRecord.getBalance() < moneyTransferRequest.getAmount()) {
-                transactionEntry.setStatus(TransactionStatus.FAILED);
-                addTransactionEntry(dslContext, transactionEntry);
-            } else {
-                AccountRecord toAccountRecord = AccountRepository.lockAccount(dslContext, moneyTransferRequest.getTo());
-                addLedgerEntry(dslContext, creditLedgerEntry);
-                addLedgerEntry(dslContext, debitLedgerEntry);
-                transactionEntry.setStatus(TransactionStatus.COMPLETED);
-                addTransactionEntry(dslContext, transactionEntry);
-                fromAccountRecord.setBalance(fromAccountRecord.getBalance() - moneyTransferRequest.getAmount());
-                fromAccountRecord.store();
-                toAccountRecord.setBalance(toAccountRecord.getBalance() + moneyTransferRequest.getAmount());
-                toAccountRecord.store();
-            }
-        });
-        if (TransactionStatus.FAILED.equals(transactionEntry.getStatus())) {
-            throw new InsufficientBalanceException();
+        addTransactionEntry(jooq, transactionEntry);
+        try {
+            jooq.transaction(c -> {
+                DSLContext dslContext = DSL.using(c);
+                AccountRecord fromAccountRecord = AccountRepository.lockAccount(dslContext, fromUuid);
+                if (fromAccountRecord.getBalance() < moneyTransferRequest.getAmount()) {
+                    throw new InsufficientBalanceException();
+                } else {
+                    AccountRecord toAccountRecord = AccountRepository.lockAccount(dslContext, moneyTransferRequest.getTo());
+                    addLedgerEntry(dslContext, creditLedgerEntry);
+                    addLedgerEntry(dslContext, debitLedgerEntry);
+                    updateTransactionStatus(dslContext, transactionEntry.getUuid(), TransactionStatus.COMPLETED);
+                    fromAccountRecord.setBalance(fromAccountRecord.getBalance() - moneyTransferRequest.getAmount());
+                    fromAccountRecord.store();
+                    toAccountRecord.setBalance(toAccountRecord.getBalance() + moneyTransferRequest.getAmount());
+                    toAccountRecord.store();
+                }
+            });
+        } catch(Exception exception) {
+            updateTransactionStatus(jooq, transactionEntry.getUuid(), TransactionStatus.FAILED);
+            throw exception;
         }
     }
 
@@ -117,15 +126,20 @@ public class TransactionRepository {
                 toUuid, creditTransactionRequest.getAmount());
         LedgerEntry creditLedgerEntry = LedgerEntry.getCreditLedgerEntry(null, toUuid,
                 creditTransactionRequest.getAmount(), transactionEntry.getUuid());
-        jooq.transaction(c -> {
-            DSLContext dslContext = DSL.using(c);
-            AccountRecord accountRecord = AccountRepository.lockAccount(dslContext, toUuid);
-            addLedgerEntry(dslContext, creditLedgerEntry);
-            transactionEntry.setStatus(TransactionStatus.COMPLETED);
-            addTransactionEntry(dslContext, transactionEntry);
-            accountRecord.setBalance(accountRecord.getBalance() + creditTransactionRequest.getAmount());
-            accountRecord.store();
-        });
+        addTransactionEntry(jooq, transactionEntry);
+        try {
+            jooq.transaction(c -> {
+                DSLContext dslContext = DSL.using(c);
+                AccountRecord accountRecord = AccountRepository.lockAccount(dslContext, toUuid);
+                addLedgerEntry(dslContext, creditLedgerEntry);
+                updateTransactionStatus(dslContext, transactionEntry.getUuid(), TransactionStatus.COMPLETED);
+                accountRecord.setBalance(accountRecord.getBalance() + creditTransactionRequest.getAmount());
+                accountRecord.store();
+            });
+        } catch(Exception exception) {
+            updateTransactionStatus(jooq, transactionEntry.getUuid(), TransactionStatus.FAILED);
+            throw exception;
+        }
     }
 
 }

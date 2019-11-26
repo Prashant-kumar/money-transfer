@@ -1,6 +1,7 @@
 package com.revolut.moneytransfer.service.impl;
 
 import com.google.inject.Inject;
+import com.revolut.moneytransfer.exceptions.AccountNotFoundException;
 import com.revolut.moneytransfer.model.Account;
 import com.revolut.moneytransfer.model.CreditTransactionRequest;
 import com.revolut.moneytransfer.model.MoneyTransferRequest;
@@ -10,6 +11,7 @@ import com.revolut.moneytransfer.repository.AccountRepository;
 import com.revolut.moneytransfer.repository.TransactionRepository;
 import com.revolut.moneytransfer.service.TransactionService;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class TransactionServiceImpl implements TransactionService {
@@ -24,12 +26,16 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Account credit(CreditTransactionRequest creditTransactionRequest, UUID to) {
+        accountRepository.findByUUID(to).orElseThrow(AccountNotFoundException::new);
         transactionRepository.addCreditToAccount(creditTransactionRequest, to);
         return accountRepository.findByUUID(to).get();
     }
 
     @Override
     public Account transfer(MoneyTransferRequest moneyTransferRequest, UUID from) {
+        accountRepository.findByUUID(from).orElseThrow(AccountNotFoundException::new);
+        accountRepository.findByUUID(moneyTransferRequest.getTo()).orElseThrow(AccountNotFoundException::new);
+
         transactionRepository.transferMoney(moneyTransferRequest, from);
         return accountRepository.findByUUID(from).get();
     }

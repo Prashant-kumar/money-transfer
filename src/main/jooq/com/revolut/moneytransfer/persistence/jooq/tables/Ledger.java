@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.processing.Generated;
+import javax.annotation.Generated;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Ledger extends TableImpl<LedgerRecord> {
 
-    private static final long serialVersionUID = -1169639088;
+    private static final long serialVersionUID = -319918845;
 
     /**
      * The reference instance of <code>PUBLIC.LEDGER</code>
