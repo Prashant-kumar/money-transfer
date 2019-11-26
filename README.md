@@ -24,17 +24,17 @@
  
  
  ## Running Locally
+ * mvn -Pjooq-generate
  * mvn clean package
  * java -jar ./target/moneytransfer-jar-with-dependencies.jar
  
  ## Running tests
+  * mvn -Pjooq-generate
   * mvn clean test
   
-  
-## Pitfalls
-If you can't run mvn clean package command and mvn is failing at the compilation step. Most likely you are facing this because of jooq's generated files. Please run **mvn -Pjooq-generate** to resolve this.
 
-## APIs
+
+ ## APIs
 
 
 | Request | Response |
